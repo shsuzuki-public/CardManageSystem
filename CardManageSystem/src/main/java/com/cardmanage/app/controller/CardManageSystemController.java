@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
@@ -18,10 +19,10 @@ import com.cardmanage.app.service.DeckService;
 @Controller
 public class CardManageSystemController {
 	
-	CardManageConfigReader config = new CardManageConfigReader();
+	//CardManageConfigReader config = new CardManageConfigReader();
 	RestTemplate restTemplate = new RestTemplate();
 	
-	public String apiUrl = config.getApiUrl();
+	//public String apiUrl = config.getApiUrl();
 	
 	@Autowired
 	ClanService clanService;
@@ -29,7 +30,8 @@ public class CardManageSystemController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/clans", method=RequestMethod.GET)
 	public String index(Model model){
-		List<ClanM> clans = restTemplate.getForObject(apiUrl+"clans", List.class);
+		//List<ClanM> clans = restTemplate.getForObject(apiUrl+"clans", List.class);
+		List<ClanM> clans = restTemplate.getForObject("http://localhost:8090/clans", List.class);
 		model.addAttribute("clans",clans);
 		return "html/clanList";
 	}
@@ -40,7 +42,17 @@ public class CardManageSystemController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/decks", method=RequestMethod.GET)
 	public String getItems(Model model) {
-		List<DeckM> decks = restTemplate.getForObject(apiUrl+"decks", List.class);
+		//List<DeckM> decks = restTemplate.getForObject(apiUrl+"decks", List.class);
+		List<DeckM> decks = restTemplate.getForObject("http://localhost:8090/decks", List.class);
+		model.addAttribute("decks", decks);
+		
+		return "html/deckList";
+	}
+
+	@RequestMapping(value="/api/decks/{id}", method=RequestMethod.POST)
+	public String getChooseDecks(Model model) {
+		@SuppressWarnings("unchecked")
+		List<DeckM> decks = restTemplate.getForObject("http://localhost:8090/decks/{id}", List.class);
 		model.addAttribute("decks", decks);
 		
 		return "html/deckList";

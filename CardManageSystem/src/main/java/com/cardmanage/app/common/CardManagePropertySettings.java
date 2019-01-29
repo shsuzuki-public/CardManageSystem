@@ -4,16 +4,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="api")
+@ConfigurationProperties(prefix = "api")
 public class CardManagePropertySettings {
 	
 	private	String url;
-	
+
+	public String getUrl(){
+		return url;
+	}	
+
 	private void setUrl(String url) {
 		this.url = url;
 	}
 	
-	public String getUrl(){
-		return url;
-	}
+
 }

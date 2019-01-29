@@ -14,7 +14,15 @@
 			</tr>
 			<tr th:each="clan,iterStat:${clans}">
 				<td th:text="${clan.clanId}"/>
-				<td th:text="${clan.clanName}"/>
+				<!--<td th:text="${clan.clanName}"/>-->
+				<td>
+					<a th:href="@{/api/decks/{id}(id=${clan.clanId})}" th:text="${clan.clanName}" />
+				</td>
+			</tr>
+			<tr>
+				<form method="get" action="decks">
+					<input type="submit" value="デッキ一覧" />
+				</form>
 			</tr>
 		</tbody>
 	</table>
