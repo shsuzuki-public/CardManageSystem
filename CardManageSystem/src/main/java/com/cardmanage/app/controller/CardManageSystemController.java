@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.cardmanage.app.common.CardManageConfigReader;
@@ -27,6 +28,10 @@ public class CardManageSystemController {
 	@Autowired
 	ClanService clanService;
 	
+	@Autowired
+	DeckService deckService;
+
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/clans", method=RequestMethod.GET)
 	public String index(Model model){
@@ -35,9 +40,6 @@ public class CardManageSystemController {
 		model.addAttribute("clans",clans);
 		return "html/clanList";
 	}
-	
-	@Autowired
-	DeckService deckService;
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/decks", method=RequestMethod.GET)
@@ -49,10 +51,12 @@ public class CardManageSystemController {
 		return "html/deckList";
 	}
 
-	@RequestMapping(value="/api/decks/{id}", method=RequestMethod.POST)
-	public String getChooseDecks(Model model) {
+	@RequestMapping(value="/api/decks/{id}", method=RequestMethod.GET)
+	public String getChooseDecks(Model model, @RequestParam("id") String id) {
 		@SuppressWarnings("unchecked")
-		List<DeckM> decks = restTemplate.getForObject("http://localhost:8090/decks/{id}", List.class);
+		String apiUrl = "http://localhost:8090/decks/{id}";
+		DeckM decks = deckService.request(apiUrl,id);
+		//List<DeckM> decks = restTemplate.getForObject(apiUrl, List.class);
 		model.addAttribute("decks", decks);
 		
 		return "html/deckList";
